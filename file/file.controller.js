@@ -133,4 +133,15 @@ function getUserByID(req, res) {
   });
 }
 
-module.exports = { listAction, listUserAction, removeAction, importAction, loginAction, statistikAction,getUserByID };
+function getTaetigkeitenList(req,res) {
+  fileModel.getTaetigkeiten((error,result) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ error: error});
+    } else {
+      res.json(result);
+    }
+  });
+}
+
+module.exports = { listAction, listUserAction, removeAction, importAction, loginAction, statistikAction,getUserByID, getTaetigkeitenList };

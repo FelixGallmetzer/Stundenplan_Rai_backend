@@ -13,7 +13,8 @@ const {
   importAction,
   loginAction,
   statistikAction,
-  getUserByID
+  getUserByID,
+  getTaetigkeitenList
 } = require('./file.controller.js');
 
 router.use(function(req, res, next) {
@@ -28,5 +29,6 @@ router.post('/import', importAction);
 router.post('/login', loginAction);
 router.get('/statistik', statistikAction);
 router.get('/statistik/:id', getUserByID);
+router.get('/taetigkeiten', getTaetigkeitenList);
 
 module.exports = router;

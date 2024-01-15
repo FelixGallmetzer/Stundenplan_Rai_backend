@@ -263,4 +263,18 @@ function getSpecificList(ID, callback) {
   });
 }
 
-module.exports = { getAll, remove, get, save, getUser, getUserList, getSpecificList };
+function getTaetigkeiten(callback) {
+  const sql=`SELECT tname 
+              FROM taetigkeiten`;
+
+  pool.query(sql, (error, result) => {
+    if (error) {
+      console.log("Error in query", error);
+      callback("Database error", null);
+    } else {
+      callback(null, result);
+    }
+  })
+}
+
+module.exports = { getAll, remove, get, save, getUser, getUserList, getSpecificList, getTaetigkeiten };
