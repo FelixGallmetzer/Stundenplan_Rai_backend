@@ -226,7 +226,7 @@ KURS*
 FS/Rai Sport
 43*/
   const sql = `
-  select mfname,mname,awdienst,COUNT(*)
+  select mfname,mname,awdienst,COUNT(*) as count
 	FROM viewarbeitswochen aw, mitarbeiter m
     WHERE aw.mid = m.mid
     GROUP BY mfname,mname,awdienst
@@ -246,7 +246,7 @@ FS/Rai Sport
 
 function getSpecificList(ID, callback) {
   const sql=`
-  select mfname,mname,awdienst,COUNT(*)
+  select mfname,mname,awdienst,COUNT(*) AS count
 	FROM viewarbeitswochen aw, mitarbeiter m
     WHERE aw.mid = m.mid
     GROUP BY mfname,mname,awdienst
