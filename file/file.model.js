@@ -21,7 +21,6 @@ function get(uid) {
 }
 
 async function save(file, plan) {
-  console.log(file);
   let lastName = "";
 
   // Find the first uppercase character
