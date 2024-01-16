@@ -109,44 +109,61 @@ async function save(file, plan) {
     let mid = null;
 
     // Execute the first query to get wid
-    pool.query(sqlWeek, valuesWeek, (errorWeek) => {
-      pool.query(sql, (error1, results1) => {
-        if (error1) {
-          console.error("Error executing query 1:", error1);
-          return;
-        }
+    try {
+      pool.query("START TRANSACTION") 
+      console.log("Starting Transaction");
+      pool.query(sqlWeek, valuesWeek, (errorWeek) => {
+        pool.query(sql, (error1, results1) => {
+          if (error1) {
+            console.error("Error executing query 1:", error1);
 
-        wid = results1.length > 0 ? results1[0].wid : null;
-
-        // Execute the second query to get mid
-        pool.query(sql1, [firstName,lastName
-        ], (error2, results2) => {
-          if (error2) {
-            console.error("Error executing query 2:", error2);
+            pool.query("ROLLBACK");
+            console.log("Rolling Back");
             return;
           }
+  
+          wid = results1.length > 0 ? results1[0].wid : null;
+  
+          // Execute the second query to get mid
+          pool.query(sql1, [firstName,lastName
+          ], (error2, results2) => {
+            if (error2) {
+              console.error("Error executing query 2:", error2);
 
-          mid = results2.length > 0 ? results2[0].mid : null;
-
-          // Perform the insert query with the obtained values
-          pool.query(sql2, [wid, mid, ...values], (error3) => {
-            if (error3) {
-              if (error3.code == 'ER_DUP_ENTRY') {
-                console.error("Duplicate entry error");
-                // Handle duplicate entry error here
-              } else {
-                console.error("Error executing insert query:", error3);
-              }
+              pool.query("ROLLBACK");
+              console.log("Rolling Back");
               return;
             }
+  
+            mid = results2.length > 0 ? results2[0].mid : null;
+  
+            // Perform the insert query with the obtained values
+            pool.query(sql2, [wid, mid, ...values], (error3) => {
+              if (error3) {
+                if (error3.code == 'ER_DUP_ENTRY') {
+                  console.error("Duplicate entry error");
 
-            // If execution reaches here, the insert was successful
+                  pool.query("ROLLBACK");
+                  console.log("Rolling Back");
+                  // Handle duplicate entry error here
+                } else {
+                  console.error("Error executing insert query:", error3);
+                }
+                return;
+              }
+  
+              pool.query("COMMIT");
+              console.log("Commiting");
+            });
           });
         });
       });
-    });
+    } catch (error) {
+      console.error("Error:", error);
+    }
   } catch (error) {
-    console.error("Error:", error);
+    pool.query("ROLLBACK");
+    console.log("Rolling Back");
   }
 }
 
