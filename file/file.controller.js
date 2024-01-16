@@ -70,7 +70,7 @@ function importAction(request, response) {
 
       // fileModel.saveWoche(plan);
     }
-    if (rowIndex > 4 && rowIndex < 46) {
+    if (rowIndex > 5 && rowIndex < 48) {
         const file1 = {
           uid: rowIndex,
           name: row[0] !== undefined ? row[0]: "",

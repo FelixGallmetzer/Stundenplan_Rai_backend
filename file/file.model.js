@@ -54,6 +54,9 @@ async function save(file, plan) {
     firstName = firstName + file.name[i];
   }
 
+  lastName = lastName.trim();
+  firstName = firstName.trim();
+
   // console.log("LastName:", lastName);
   // console.log("FirstName:", firstName);
 
