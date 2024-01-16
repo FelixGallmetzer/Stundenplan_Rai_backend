@@ -74,16 +74,59 @@ function importAction(request, response) {
         const file1 = {
           uid: rowIndex,
           name: row[0] !== undefined ? row[0]: "",
-          montag: row[1] !== undefined ? row[1]: "",
-          dienstag: row[2] !== undefined ? row[2]: "",
-          mittwoch: row[3] !== undefined ? row[3]: "",
-          donnerstag: row[4] !== undefined ? row[4]: "",
-          freitag: row[5] !== undefined ? row[5]: "",
-          samstag: row[6] !== undefined ? row[6]: "",
-          sonntag: row[7] !== undefined ? row[7]: "",
+          montag: row[1] !== undefined ? row[1].toUpperCase(): "",
+          dienstag: row[2] !== undefined ? row[2].toUpperCase(): "",
+          mittwoch: row[3] !== undefined ? row[3].toUpperCase(): "",
+          donnerstag: row[4] !== undefined ? row[4].toUpperCase(): "",
+          freitag: row[5] !== undefined ? row[5].toUpperCase(): "",
+          samstag: row[6] !== undefined ? row[6].toUpperCase(): "",
+          sonntag: row[7] !== undefined ? row[7].toUpperCase(): "",
           size: 0,
           data: null
         };
+        let index = file1.montag.indexOf(' ');
+
+        if (index !== -1) {
+          file1.montag = file1.montag.slice(0, index);
+        }
+
+        index = file1.dienstag.indexOf(' ');
+
+        if (index !== -1) {
+          file1.dienstag = file1.dienstag.slice(0, index);
+        }
+
+        index = file1.mittwoch.indexOf(' ');
+
+        if (index !== -1) {
+          file1.mittwoch = file1.mittwoch.slice(0, index);
+        }
+
+
+        index = file1.donnerstag.indexOf(' ');
+
+        if (index !== -1) {
+          file1.donnerstag = file1.donnerstag.slice(0, index);
+        }
+
+        index = file1.freitag.indexOf(' ');
+
+        if (index !== -1) {
+          file1.freitag = file1.freitag.slice(0, index);
+        }
+
+        index = file1.samstag.indexOf(' ');
+
+        if (index !== -1) {
+          file1.samstag = file1.samstag.slice(0, index);
+        }
+
+        index = file1.sonntag.indexOf(' ');
+
+        if (index !== -1) {
+          file1.sonntag = file1.sonntag.slice(0, index);
+        }
+
         fileModel.save(file1,plan);
     } 
   });

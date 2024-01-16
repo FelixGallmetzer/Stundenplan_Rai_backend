@@ -1,7 +1,7 @@
 const mysql = require("mysql");
 
 const pool = mysql.createPool({
-  connectionLimit: 5,
+  connectionLimit: 3,
   host: "ulsq0qqx999wqz84.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
   user: "g5ec4ljgfr0kwo61",
   password: "mae6mu11wtk59d7k",
@@ -21,6 +21,7 @@ function get(uid) {
 }
 
 async function save(file, plan) {
+  console.log(file);
   let lastName = "";
 
   // Find the first uppercase character
@@ -184,50 +185,7 @@ async function getUser(username, password) {
 }
 
 function getUserList(callback) {
-  /*NL 
-A 
-E 
-RIP 
-B 
-W1 (sw)
-E/P + PR(RT)
-AF
-B/Lok/C
-D/1
-RR
-D
-D/2
-F/M
-B/D
-RT/Mod.
-B/Spezial
-A/P
-A/P M-RIP
-E/M
-E/M M-NL
-E/M M-RIP
-W2 (sw)
-W4 (sw)
-Fe
-B/Planung
-A(Sportpl.)
-W3(sw)/KURS
-AF
-E/P + PR
-RN
-PuC/Vorb.
-PuC/Mod.
-BF
-W2(sw)/KURS
-RO/PT
-Rom
-PS
-kein Dienst
-F/M
-FREI
-KURS*
-FS/Rai Sport
-43*/
+ 
   const sql = `
   select mfname,mname,awdienst,COUNT(*) as count
 	FROM viewarbeitswochen aw, mitarbeiter m
