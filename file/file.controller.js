@@ -16,122 +16,127 @@ function removeAction(request, response) {
 }
 
 function importAction(request, response) {
-  const xlsx = require('node-xlsx');
-  const fs = require('fs');
-  const { format, addDays } = require('date-fns');
-  const { utcToZonedTime } = require('date-fns-tz');
+  if (false) {
+    response.status(500);
+  } else {
 
-  const filePath = 'tempfiles/input.xls';
-
-  const file = {
-    uid: request.body.uid || -1,
-    name: request.files.fileinputfield.name,
-    size: request.files.fileinputfield.size,
-    data: request.files.fileinputfield.data
-  };
-
-  fs.writeFile(filePath,file.data, (err) => { 
-    if (err) 
-      console.log(err); 
-  });
-
-  const excelData = xlsx.parse(fs.readFileSync(filePath));
-
-  const firstSheet = excelData[0];
-
-  const targetTimeZone = 'Europe/Rome';
-  let formatedDate;
-  let plan;
-
-  firstSheet.data.forEach((row, rowIndex) => {
-    if (rowIndex == 1) {
-      //getting Startdate
-      const XLSdate = row[6];
-      const baseDate = new Date('1904-01-01');
-      const parsedXLSdate = parseFloat(XLSdate, 10);
-      date = addDays(baseDate, parsedXLSdate);
-
-      const zonedDate = utcToZonedTime(date,targetTimeZone);
-
-      formatedDate = format(zonedDate, 'yyyy-MM-dd');
-
-      //getting UploadDate
-      const uploadDatum = new Date(Date.now());
-      const formatedUploadDatum = format(uploadDatum, 'yyyy-MM-dd');
-
-      //getting XLS file
-      const XLS = file.data;
-
-      plan = {
-        start: formatedDate,
-        upload: formatedUploadDatum,
-        xlsfile: XLS
+    const xlsx = require('node-xlsx');
+    const fs = require('fs');
+    const { format, addDays } = require('date-fns');
+    const { utcToZonedTime } = require('date-fns-tz');
+  
+    const filePath = 'tempfiles/input.xls';
+  
+    const file = {
+      uid: request.body.uid || -1,
+      name: request.files.fileinputfield.name,
+      size: request.files.fileinputfield.size,
+      data: request.files.fileinputfield.data
+    };
+  
+    fs.writeFile(filePath,file.data, (err) => { 
+      if (err) 
+        console.log(err); 
+    });
+  
+    const excelData = xlsx.parse(fs.readFileSync(filePath));
+  
+    const firstSheet = excelData[0];
+  
+    const targetTimeZone = 'Europe/Rome';
+    let formatedDate;
+    let plan;
+  
+    firstSheet.data.forEach((row, rowIndex) => {
+      if (rowIndex == 1) {
+        //getting Startdate
+        const XLSdate = row[6];
+        const baseDate = new Date('1904-01-01');
+        const parsedXLSdate = parseFloat(XLSdate, 10);
+        date = addDays(baseDate, parsedXLSdate);
+  
+        const zonedDate = utcToZonedTime(date,targetTimeZone);
+  
+        formatedDate = format(zonedDate, 'yyyy-MM-dd');
+  
+        //getting UploadDate
+        const uploadDatum = new Date(Date.now());
+        const formatedUploadDatum = format(uploadDatum, 'yyyy-MM-dd');
+  
+        //getting XLS file
+        const XLS = file.data;
+  
+        plan = {
+          start: formatedDate,
+          upload: formatedUploadDatum,
+          xlsfile: XLS
+        }
+  
+        // fileModel.saveWoche(plan);
       }
-
-      // fileModel.saveWoche(plan);
-    }
-    if (rowIndex > 5 && rowIndex < 48) {
-        const file1 = {
-          uid: rowIndex,
-          name: row[0] !== undefined ? row[0]: "",
-          montag: row[1] !== undefined ? row[1].toUpperCase(): "",
-          dienstag: row[2] !== undefined ? row[2].toUpperCase(): "",
-          mittwoch: row[3] !== undefined ? row[3].toUpperCase(): "",
-          donnerstag: row[4] !== undefined ? row[4].toUpperCase(): "",
-          freitag: row[5] !== undefined ? row[5].toUpperCase(): "",
-          samstag: row[6] !== undefined ? row[6].toUpperCase(): "",
-          sonntag: row[7] !== undefined ? row[7].toUpperCase(): "",
-          size: 0,
-          data: null
-        };
-        let index = file1.montag.indexOf(' ');
-
-        if (index !== -1) {
-          file1.montag = file1.montag.slice(0, index);
+      if (rowIndex > 5 && rowIndex < 48) {
+          const file1 = {
+            uid: rowIndex,
+            name: row[0] !== undefined ? row[0]: "",
+            montag: row[1] !== undefined ? row[1].toUpperCase(): "",
+            dienstag: row[2] !== undefined ? row[2].toUpperCase(): "",
+            mittwoch: row[3] !== undefined ? row[3].toUpperCase(): "",
+            donnerstag: row[4] !== undefined ? row[4].toUpperCase(): "",
+            freitag: row[5] !== undefined ? row[5].toUpperCase(): "",
+            samstag: row[6] !== undefined ? row[6].toUpperCase(): "",
+            sonntag: row[7] !== undefined ? row[7].toUpperCase(): "",
+            size: 0,
+            data: null
+          };
+          let index = file1.montag.indexOf(' ');
+  
+          if (index !== -1) {
+            file1.montag = file1.montag.slice(0, index);
+          }
+  
+          index = file1.dienstag.indexOf(' ');
+  
+          if (index !== -1) {
+            file1.dienstag = file1.dienstag.slice(0, index);
+          }
+  
+          index = file1.mittwoch.indexOf(' ');
+  
+          if (index !== -1) {
+            file1.mittwoch = file1.mittwoch.slice(0, index);
+          }
+  
+  
+          index = file1.donnerstag.indexOf(' ');
+  
+          if (index !== -1) {
+            file1.donnerstag = file1.donnerstag.slice(0, index);
+          }
+  
+          index = file1.freitag.indexOf(' ');
+  
+          if (index !== -1) {
+            file1.freitag = file1.freitag.slice(0, index);
+          }
+  
+          index = file1.samstag.indexOf(' ');
+  
+          if (index !== -1) {
+            file1.samstag = file1.samstag.slice(0, index);
+          }
+  
+          index = file1.sonntag.indexOf(' ');
+  
+          if (index !== -1) {
+            file1.sonntag = file1.sonntag.slice(0, index);
+          }
+  
+          fileModel.save(file1,plan);
         }
-
-        index = file1.dienstag.indexOf(' ');
-
-        if (index !== -1) {
-          file1.dienstag = file1.dienstag.slice(0, index);
-        }
-
-        index = file1.mittwoch.indexOf(' ');
-
-        if (index !== -1) {
-          file1.mittwoch = file1.mittwoch.slice(0, index);
-        }
-
-
-        index = file1.donnerstag.indexOf(' ');
-
-        if (index !== -1) {
-          file1.donnerstag = file1.donnerstag.slice(0, index);
-        }
-
-        index = file1.freitag.indexOf(' ');
-
-        if (index !== -1) {
-          file1.freitag = file1.freitag.slice(0, index);
-        }
-
-        index = file1.samstag.indexOf(' ');
-
-        if (index !== -1) {
-          file1.samstag = file1.samstag.slice(0, index);
-        }
-
-        index = file1.sonntag.indexOf(' ');
-
-        if (index !== -1) {
-          file1.sonntag = file1.sonntag.slice(0, index);
-        }
-
-        fileModel.save(file1,plan);
-    } 
-  });
-
-  response.redirect(request.baseUrl);
+        });
+      
+        response.redirect(request.baseUrl);
+      } 
 }
 // Um JWT erstellen zu können
 const jwt = require('jsonwebtoken');
