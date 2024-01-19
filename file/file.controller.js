@@ -19,7 +19,7 @@ function importAction(request, response) {
   if (false) {
     response.status(500);
   } else {
-
+    // console.log(request);
     const xlsx = require('node-xlsx');
     const fs = require('fs');
     const { format, addDays } = require('date-fns');
@@ -29,9 +29,9 @@ function importAction(request, response) {
   
     const file = {
       uid: request.body.uid || -1,
-      name: request.files.fileinputfield.name,
-      size: request.files.fileinputfield.size,
-      data: request.files.fileinputfield.data
+      name: request.files.file.name,
+      size: request.files.file.size,
+      data: request.files.file.data
     };
   
     fs.writeFile(filePath,file.data, (err) => { 
