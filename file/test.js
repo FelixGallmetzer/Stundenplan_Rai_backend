@@ -44,3 +44,25 @@ async function getAll() {
 }
 
 getAll().then(result => {console.log(result)}).catch(error => {console.log(error)});
+
+let errorOccurred = false;
+
+start transaction 
+loop {
+  try {
+    // Database operations
+    wid = await getwid;
+    mid = await gemid;
+    await insert;
+    
+  } catch {
+    // Handle errors
+    rollback
+    errorOccurred = true;
+    break;  // exit the loop if an error occurs
+  }
+}
+
+if (!errorOccurred) {
+  commit
+}
