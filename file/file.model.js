@@ -224,10 +224,17 @@ async function save(file2, firstSheet) {
     // commit
     await database.query("COMMIT");
     console.log("Commiting");
+    return "201";
   } catch (error) {
-    console.log(error);
     await database.query("ROLLBACK");
     console.log("Rollback");
+    if (error instanceof TypeError) {
+      return "406"
+    } else if (error.code == "ER_DUP_ENTRY") {
+      return "409";
+    } else {
+      return "500";
+    }
   }
 }
 

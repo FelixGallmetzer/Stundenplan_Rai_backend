@@ -19,7 +19,7 @@ function removeAction(request, response) {
   response.redirect(request.baseUrl);
 }
 
-function importAction(request, response) {
+async function importAction(request, response) {
   // return response.status(500).json({ error: 'This is an example error message' });
   
   const xlsx = require("node-xlsx");
@@ -44,10 +44,32 @@ function importAction(request, response) {
 
   // console.log("saving");
   // console.log(file.data);
-  fileModel.save(file, firstSheet);
+  result = await fileModel.save(file, firstSheet);
+  if (result === "201") {
+    return response.status(201).json({ message: 'Erfolgreich Importiert' });
+  } else if (result === "500") {
+    return response.status(500).json({ error: 'Ein interner Fehler ist aufgetreten, bitte versuche es nochmal' });
+  } else if (result === "409") {
+    return response.status(409).json({ error: 'Stundenplan wurde bereit hochgeladen'});
+  } else if (result === "406") {
+    return response.status(406).json({ error: 'Etwas im Stundenplan ist nicht ausgefüllt oder wurde nicht richtig formatiert'});
+  }
+  // .then(result => {
+  //   console.log(result);
+  //   if (result === "201") {
+  //     response.status(201).send('Created');
+  //   } else {
+  //     response.status(505).send('test');
+  //   }
+  // }).catch(error => {
+  //   console.error("Error saving file:", error);
+  //   response.status(500).send('Internal Server Error');
+  // });
 
   response.redirect(request.baseUrl);
 }
+
+
 // Um JWT erstellen zu können
 const jwt = require("jsonwebtoken");
 // Sekunden der Lebenszeit eines Tokens
