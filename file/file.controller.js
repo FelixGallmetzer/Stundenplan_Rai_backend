@@ -48,23 +48,12 @@ async function importAction(request, response) {
   if (result === "201") {
     return response.status(201).json({ message: 'Erfolgreich Importiert' });
   } else if (result === "500") {
-    return response.status(500).json({ error: 'Ein interner Fehler ist aufgetreten, bitte versuche es nochmal' });
+    return response.status(500).json({ message: 'Ein interner Fehler ist aufgetreten, bitte versuche es nochmal' });
   } else if (result === "409") {
-    return response.status(409).json({ error: 'Stundenplan wurde bereit hochgeladen'});
+    return response.status(409).json({ message: 'Stundenplan wurde bereit hochgeladen'});
   } else if (result === "406") {
-    return response.status(406).json({ error: 'Etwas im Stundenplan ist nicht ausgefüllt oder wurde nicht richtig formatiert'});
+    return response.status(406).json({ message: 'Etwas im Stundenplan ist nicht ausgefüllt oder wurde nicht richtig formatiert'});
   }
-  // .then(result => {
-  //   console.log(result);
-  //   if (result === "201") {
-  //     response.status(201).send('Created');
-  //   } else {
-  //     response.status(505).send('test');
-  //   }
-  // }).catch(error => {
-  //   console.error("Error saving file:", error);
-  //   response.status(500).send('Internal Server Error');
-  // });
 
   response.redirect(request.baseUrl);
 }
