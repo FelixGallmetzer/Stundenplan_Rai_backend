@@ -117,8 +117,22 @@ function getTaetigkeitenList(req, res) {
   });
 }
 
-function mitarbeiterHinzufuegen(req,res) {
 
+
+
+
+
+
+
+
+
+async function mitarbeiterHinzufuegen(req,res) {
+  try {
+    console.log(req.params.mitarbeiter);
+    // let result = await fileModel.addUser(req.params.mitarbeiter);
+  } catch (error) {
+
+  }
 }
 
 module.exports = {
