@@ -333,6 +333,18 @@ function getTaetigkeiten(callback) {
   });
 }
 
+async function getMitarbeiter(callback) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `SELECT mname,mfname,memail,mpassword,bid
+                  FROM mitarbeiter`;
+    const result = await database.queryClose(sql);
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -342,4 +354,5 @@ module.exports = {
   getUserList,
   getSpecificList,
   getTaetigkeiten,
+  getMitarbeiter
 };

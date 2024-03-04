@@ -117,6 +117,17 @@ function getTaetigkeitenList(req, res) {
   });
 }
 
+function getMitarbeiter(req,res) {
+  fileModel.getMitarbeiter((error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ error: error });
+    } else {
+      res.json(result);
+    }
+  });
+}
+
 module.exports = {
   listAction,
   listUserAction,
@@ -126,4 +137,5 @@ module.exports = {
   statistikAction,
   getUserByID,
   getTaetigkeitenList,
+  getMitarbeiter
 };
