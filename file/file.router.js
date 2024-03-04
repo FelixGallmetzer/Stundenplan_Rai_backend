@@ -32,6 +32,6 @@ router.post('/login', loginAction);
 router.get('/statistik', statistikAction);
 router.get('/statistik/:id', getUserByID);
 router.get('/taetigkeiten', getTaetigkeitenList);
-router.get('/mitarbeiterhinzufuegen/:mitarbeiter',mitarbeiterHinzufuegen);
+router.post('/mitarbeiterhinzufuegen',mitarbeiterHinzufuegen);
 
 module.exports = router;

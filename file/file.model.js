@@ -333,6 +333,18 @@ function getTaetigkeiten(callback) {
   });
 }
 
+async function addUser(user) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `INSERT INTO mitarbeiter(bid, memail, mfname, mname, mpasswort)
+                  VALUES (?, ?, ?, ?, ?)`
+    const result = await database.queryClose(sql, user);
+    return(result);
+  } catch (error) {
+    return(error);
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -342,4 +354,5 @@ module.exports = {
   getUserList,
   getSpecificList,
   getTaetigkeiten,
+  addUser
 };
