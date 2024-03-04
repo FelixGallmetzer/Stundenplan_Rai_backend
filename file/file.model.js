@@ -339,9 +339,9 @@ async function getMitarbeiter(callback) {
     const sql = `SELECT mname,mfname,memail,mpassword,bid
                   FROM mitarbeiter`;
     const result = await database.queryClose(sql);
-    callback("Database error", null);
-  } catch (error) {
     callback(null, result);
+  } catch (error) {
+    callback("Database error", null);
   }
 }
 
