@@ -117,6 +117,10 @@ function getTaetigkeitenList(req, res) {
   });
 }
 
+function mitarbeiterHinzufuegen(req,res) {
+
+}
+
 module.exports = {
   listAction,
   listUserAction,
@@ -126,4 +130,5 @@ module.exports = {
   statistikAction,
   getUserByID,
   getTaetigkeitenList,
+  mitarbeiterHinzufuegen
 };
