@@ -337,12 +337,15 @@ async function addUser(user) {
   try {
     const database = new Database(connectionProperties);
     const sql = `INSERT INTO mitarbeiter(bid, memail, mfname, mname, mpasswort)
-                  VALUES (?, ?, ?, ?, ?)`
-    const result = await database.queryClose(sql, user);
-    return(result);
+                  VALUES (?, ?, ?, ?, ?)`;
+    
+    // Assuming user is an array of values in the same order as in the SQL query
+    const result = await database.queryClose(sql, [user.bid, user.memail, user.mfname, user.mname, user.mpasswort]);
+    return result;
   } catch (error) {
-    return(error);
+    return error;
   }
+  
 }
 
 module.exports = {

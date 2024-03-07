@@ -128,9 +128,7 @@ function getTaetigkeitenList(req, res) {
 
 async function mitarbeiterHinzufuegen(req,res) {
   try {
-    // console.log(req.body);
-    let result = await fileModel.addUser(req.params.mitarbeiter);
-    console.log(result);
+    let result = await fileModel.addUser(req.body);
     res.status(200).json({ message: "Mitarbeiter erfolgreich hinzugefügt"});
   } catch (error) {
     console.log(error);
