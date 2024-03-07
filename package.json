@@ -6,7 +6,7 @@
   "scripts": {
     "test": "nodemon index.js"
   },
-  "author": "Raphael Siller",
+  "author": "Felix Gallmetzer",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
@@ -20,6 +20,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.6.5",
     "node-xlsx": "^0.23.0",
+    "nodemon": "^3.1.0",
     "uuid": "^9.0.1"
   }
 }

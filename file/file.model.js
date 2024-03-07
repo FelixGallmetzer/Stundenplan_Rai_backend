@@ -333,6 +333,19 @@ function getTaetigkeiten(callback) {
   });
 }
 
+async function addUser(user) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `INSERT INTO mitarbeiter(bid, memail, mfname, mname, mpasswort)
+                  VALUES (?, ?, ?, ?, ?)`;
+    
+    const result = await database.queryClose(sql, [user.bid, user.memail, user.mfname, user.mname, user.mpasswort]);
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
+  
 async function getMitarbeiter(callback) {
   try {
     const database = new Database(connectionProperties);
@@ -345,6 +358,20 @@ async function getMitarbeiter(callback) {
   }
 }
 
+async function getMitarbeiterbyID(id) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `SELECT * 
+                  FROM mitarbeiter
+                  WHERE mid = ?`;
+    
+    const result = await database.queryClose(sql, id);
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -354,5 +381,7 @@ module.exports = {
   getUserList,
   getSpecificList,
   getTaetigkeiten,
-  getMitarbeiter
+  addUser,
+  getMitarbeiter,
+  getMitarbeiterbyID
 };

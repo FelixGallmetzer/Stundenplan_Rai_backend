@@ -117,6 +117,17 @@ function getTaetigkeitenList(req, res) {
   });
 }
 
+
+async function mitarbeiterHinzufuegen(req,res) {
+  try {
+    let result = await fileModel.addUser(req.body);
+    res.status(200).json({ message: "Mitarbeiter erfolgreich hinzugefügt"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
+}
+
 function getMitarbeiter(req,res) {
   fileModel.getMitarbeiter((error, result) => {
     if (error) {
@@ -128,6 +139,16 @@ function getMitarbeiter(req,res) {
   });
 }
 
+async function getMitarbeiterbyID(req,res) {
+  try {
+    let result = await fileModel.getMitarbeiterbyID(req.params.id);
+    res.status(200).json({ message: "Benutzer konnte erfolgreich geholt werden" , result: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
+}
+
 module.exports = {
   listAction,
   listUserAction,
@@ -137,5 +158,7 @@ module.exports = {
   statistikAction,
   getUserByID,
   getTaetigkeitenList,
-  getMitarbeiter
+  mitarbeiterHinzufuegen,
+  getMitarbeiter,
+  getMitarbeiterbyID
 };
