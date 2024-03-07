@@ -118,14 +118,6 @@ function getTaetigkeitenList(req, res) {
 }
 
 
-
-
-
-
-
-
-
-
 async function mitarbeiterHinzufuegen(req,res) {
   try {
     let result = await fileModel.addUser(req.body);
@@ -134,6 +126,15 @@ async function mitarbeiterHinzufuegen(req,res) {
     console.log(error);
     res.status(500).json({ error: error });
   }
+function getMitarbeiter(req,res) {
+  fileModel.getMitarbeiter((error, result) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ error: error });
+    } else {
+      res.json(result);
+    }
+  });
 }
 
 module.exports = {
@@ -145,5 +146,6 @@ module.exports = {
   statistikAction,
   getUserByID,
   getTaetigkeitenList,
-  mitarbeiterHinzufuegen
+  mitarbeiterHinzufuegen,
+  getMitarbeiter
 };

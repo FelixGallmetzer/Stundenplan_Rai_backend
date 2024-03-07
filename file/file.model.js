@@ -346,6 +346,16 @@ async function addUser(user) {
     return error;
   }
   
+async function getMitarbeiter(callback) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `SELECT mname,mfname,memail,mpassword,bid
+                  FROM mitarbeiter`;
+    const result = await database.queryClose(sql);
+    callback(null, result);
+  } catch (error) {
+    callback("Database error", null);
+  }
 }
 
 module.exports = {
@@ -357,5 +367,6 @@ module.exports = {
   getUserList,
   getSpecificList,
   getTaetigkeiten,
-  addUser
+  addUser,
+  getMitarbeiter
 };

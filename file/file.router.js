@@ -15,8 +15,8 @@ const {
   statistikAction,
   getUserByID,
   getTaetigkeitenList,
-
-  mitarbeiterHinzufuegen
+  mitarbeiterHinzufuegen,
+  getMitarbeiter
 } = require('./file.controller.js');
 
 router.use(function(req, res, next) {
@@ -33,5 +33,6 @@ router.get('/statistik', statistikAction);
 router.get('/statistik/:id', getUserByID);
 router.get('/taetigkeiten', getTaetigkeitenList);
 router.post('/mitarbeiterhinzufuegen',mitarbeiterHinzufuegen);
+router.get('/mitarbeiter', getMitarbeiter);
 
 module.exports = router;
