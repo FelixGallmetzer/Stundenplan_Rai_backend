@@ -345,6 +345,7 @@ async function addUser(user) {
   } catch (error) {
     return error;
   }
+}
   
 async function getMitarbeiter(callback) {
   try {

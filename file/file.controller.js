@@ -126,6 +126,8 @@ async function mitarbeiterHinzufuegen(req,res) {
     console.log(error);
     res.status(500).json({ error: error });
   }
+}
+
 function getMitarbeiter(req,res) {
   fileModel.getMitarbeiter((error, result) => {
     if (error) {
