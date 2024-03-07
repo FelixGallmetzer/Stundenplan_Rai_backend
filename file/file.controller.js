@@ -139,6 +139,16 @@ function getMitarbeiter(req,res) {
   });
 }
 
+async function getMitarbeiterbyID(req,res) {
+  try {
+    let result = await fileModel.getMitarbeiterbyID(req.params.id);
+    res.status(200).json({ message: "Benutzer konnte erfolgreich geholt werden" , result: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
+}
+
 module.exports = {
   listAction,
   listUserAction,
@@ -149,5 +159,6 @@ module.exports = {
   getUserByID,
   getTaetigkeitenList,
   mitarbeiterHinzufuegen,
-  getMitarbeiter
+  getMitarbeiter,
+  getMitarbeiterbyID
 };

@@ -339,7 +339,6 @@ async function addUser(user) {
     const sql = `INSERT INTO mitarbeiter(bid, memail, mfname, mname, mpasswort)
                   VALUES (?, ?, ?, ?, ?)`;
     
-    // Assuming user is an array of values in the same order as in the SQL query
     const result = await database.queryClose(sql, [user.bid, user.memail, user.mfname, user.mname, user.mpasswort]);
     return result;
   } catch (error) {
@@ -359,6 +358,20 @@ async function getMitarbeiter(callback) {
   }
 }
 
+async function getMitarbeiterbyID(id) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `SELECT * 
+                  FROM mitarbeiter
+                  WHERE mid = ?`;
+    
+    const result = await database.queryClose(sql, id);
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -369,5 +382,6 @@ module.exports = {
   getSpecificList,
   getTaetigkeiten,
   addUser,
-  getMitarbeiter
+  getMitarbeiter,
+  getMitarbeiterbyID
 };
