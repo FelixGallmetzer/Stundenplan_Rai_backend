@@ -117,6 +117,15 @@ function getTaetigkeitenList(req, res) {
   });
 }
 
+
+async function mitarbeiterHinzufuegen(req,res) {
+  try {
+    let result = await fileModel.addUser(req.body);
+    res.status(200).json({ message: "Mitarbeiter erfolgreich hinzugefügt"});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
 function getMitarbeiter(req,res) {
   fileModel.getMitarbeiter((error, result) => {
     if (error) {
@@ -137,5 +146,6 @@ module.exports = {
   statistikAction,
   getUserByID,
   getTaetigkeitenList,
+  mitarbeiterHinzufuegen,
   getMitarbeiter
 };
