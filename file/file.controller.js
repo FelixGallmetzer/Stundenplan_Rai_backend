@@ -20,7 +20,6 @@ function removeAction(request, response) {
 }
 
 async function importAction(request, response) {
-  // return response.status(500).json({ error: 'This is an example error message' });
   
   const xlsx = require("node-xlsx");
   const fs = require("fs");
@@ -42,20 +41,54 @@ async function importAction(request, response) {
 
   const firstSheet = excelData[0];
 
+  fileModel.save(file,firstSheet)
+    .then(result => response.json(result))
+    .catch(error => {
+      if (error.includes("arbeiterwochen_ibfk_3")) {
+        let rowIndex = error.indexOf("Current Row:") + 12;
+        let row = error.substring(rowIndex);
+        error = "Das Feld bei Zeile " + row + " Spalte 2 konnte nicht gelesen werden"
+      } else if (error.includes("arbeiterwochen_ibfk_4")) {
+        let rowIndex = error.indexOf("Current Row:") + 12;
+        let row = error.substring(rowIndex);
+        error = "Das Feld bei Zeile " + row + " Spalte 3 konnte nicht gelesen werden"
+      } else if (error.includes("arbeiterwochen_ibfk_5")) {
+        let rowIndex = error.indexOf("Current Row:") + 12;
+        let row = error.substring(rowIndex);
+        error = "Das Feld bei Zeile " + row + " Spalte 4 konnte nicht gelesen werden"
+      } else if (error.includes("arbeiterwochen_ibfk_6")) {
+        let rowIndex = error.indexOf("Current Row:") + 12;
+        let row = error.substring(rowIndex);
+        error = "Das Feld bei Zeile " + row + " Spalte 5 konnte nicht gelesen werden"
+      } else if (error.includes("arbeiterwochen_ibfk_7")) {
+        let rowIndex = error.indexOf("Current Row:") + 12;
+        let row = error.substring(rowIndex);
+        error = "Das Feld bei Zeile " + row + " Spalte 6 konnte nicht gelesen werden"
+      } else if (error.includes("arbeiterwochen_ibfk_8")) {
+        let rowIndex = error.indexOf("Current Row:") + 12;
+        let row = error.substring(rowIndex);
+        error = "Das Feld bei Zeile " + row + " Spalte 7 konnte nicht gelesen werden"
+      } else if (error.includes("arbeiterwochen_ibfk_9")) {
+        let rowIndex = error.indexOf("Current Row:") + 12;
+        let row = error.substring(rowIndex);
+        error = "Das Feld bei Zeile " + row + " Spalte 8 konnte nicht gelesen werden"
+      }
+      response.status(400).json(error)
+    })
   // console.log("saving");
   // console.log(file.data);
-  result = await fileModel.save(file, firstSheet);
-  if (result === "201") {
-    return response.status(201).json({ message: 'Erfolgreich Importiert' });
-  } else if (result === "500") {
-    return response.status(500).json({ message: 'Ein interner Fehler ist aufgetreten, bitte versuche es nochmal' });
-  } else if (result === "409") {
-    return response.status(409).json({ message: 'Stundenplan wurde bereit hochgeladen'});
-  } else if (result === "406") {
-    return response.status(406).json({ message: 'Etwas im Stundenplan ist nicht ausgefüllt oder wurde nicht richtig formatiert'});
-  }
+  // result = await fileModel.save(file, firstSheet);
+  // if (result === "201") {
+  //   return response.status(201).json({ message: 'Erfolgreich Importiert' });
+  // } else if (result === "500") {
+  //   return response.status(500).json({ message: 'Ein interner Fehler ist aufgetreten, bitte versuche es nochmal' });
+  // } else if (result === "409") {
+  //   return response.status(409).json({ message: 'Stundenplan wurde bereit hochgeladen'});
+  // } else if (result === "406") {
+  //   return response.status(406).json({ message: 'Etwas im Stundenplan ist nicht ausgefüllt oder wurde nicht richtig formatiert'});
+  // }
 
-  response.redirect(request.baseUrl);
+  // response.redirect(request.baseUrl);
 }
 
 

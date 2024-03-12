@@ -52,17 +52,26 @@ async function save(file2, firstSheet) {
   let formatedDate;
   let plan;
   let database;
+  let wid = null;
+  let currentRow = null;
 
   try {
     database = new Database(connectionProperties);
+    let endeerreicht = false;
     await database.query("START TRANSACTION");
     for (const [rowIndex, row] of firstSheet.data.entries()) {
+      if (row[0] == "Studio") {
+        endeerreicht = true;
+      }
       // console.log(rowIndex);
-      if (rowIndex == 1) {
+      if (!endeerreicht && rowIndex == 1) {
         //getting Startdate
         const XLSdate = row[6];
         const baseDate = new Date("1904-01-01");
         const parsedXLSdate = parseFloat(XLSdate, 10);
+        if (!parsedXLSdate) {
+          throw new Error("Das Datum für den Wochenanfang konnte nicht gelesen werden");
+        }
         date = addDays(baseDate, parsedXLSdate);
 
         const zonedDate = utcToZonedTime(date, targetTimeZone);
@@ -82,11 +91,24 @@ async function save(file2, firstSheet) {
           xlsfile: XLS,
         };
 
-        // fileModel.saveWoche(plan);
+        // sql Query to insert Wochenplan into DB
+        const sqlWeek = `
+        INSERT INTO wochenplaene(wwochenstartdatum,wuploaddatum,wexcel)
+        VALUES (?,?,?)`;
+
+        // Values used to insert Wochenplan
+        const valuesWeek = [plan.start, plan.upload, plan.xlsfile];
+
+        // Inserting Week
+        result = await database.query(sqlWeek, valuesWeek);
+        console.log("inserting week");
+
+        wid = result.insertId;
+
       }
-      if (rowIndex > 5 && rowIndex < 48) {
+      if (!endeerreicht && rowIndex > 5) {
+
         const file1 = {
-          uid: rowIndex,
           name: row[0] !== undefined ? row[0] : "",
           montag: row[1] !== undefined ? row[1].toUpperCase() : "",
           dienstag: row[2] !== undefined ? row[2].toUpperCase() : "",
@@ -94,9 +116,7 @@ async function save(file2, firstSheet) {
           donnerstag: row[4] !== undefined ? row[4].toUpperCase() : "",
           freitag: row[5] !== undefined ? row[5].toUpperCase() : "",
           samstag: row[6] !== undefined ? row[6].toUpperCase() : "",
-          sonntag: row[7] !== undefined ? row[7].toUpperCase() : "",
-          size: 0,
-          data: null,
+          sonntag: row[7] !== undefined ? row[7].toUpperCase() : ""
         };
         const shortenDay = (day) => {
           const index = file1[day].indexOf(" ");
@@ -159,17 +179,6 @@ async function save(file2, firstSheet) {
         //   console.log(error);
         // });
 
-        // sql Query to insert Wochenplan into DB
-        const sqlWeek = `
-         INSERT INTO wochenplaene(wwochenstartdatum,wuploaddatum,wexcel)
-         VALUES (?,?,?)`;
-
-        // sql Query to get wid from DB
-        const sql = `      
-         SELECT wid 
-         FROM wochenplaene
-         WHERE wwochenstartdatum = '${plan.start}'`;
-
         // sql Query to get mid from DB
         const sql1 = `
          SELECT mid
@@ -180,9 +189,37 @@ async function save(file2, firstSheet) {
         const sql2 = `
          INSERT INTO arbeiterwochen(wid, mid, awmontag, awdienstag, awmittwoch, awdonnerstag, awfreitag, awsamstag, awsonntag)
          VALUES (?,?,?,?,?,?,?,?,?)`;
-
-        // Values used to insert Wochenplan
-        const valuesWeek = [plan.start, plan.upload, plan.xlsfile];
+        
+        let plusIndex = null;
+        if (file1.montag.indexOf("+") != -1) {
+          plusIndex = file1.montag.indexOf("+");
+          file1.montag = file1.montag.substring(0,plusIndex)
+        }
+        if (file1.dienstag.indexOf("+") != -1) {
+          plusIndex = file1.dienstag.indexOf("+");
+          file1.dienstag = file1.dienstag.substring(0,plusIndex)
+        }
+        if (file1.mittwoch.indexOf("+") != -1) {
+          plusIndex = file1.mittwoch.indexOf("+");
+          file1.mittwoch = file1.mittwoch.substring(0,plusIndex)
+        }
+        if (file1.donnerstag.indexOf("+") != -1) {
+          plusIndex = file1.donnerstag.indexOf("+");
+          file1.donnerstag = file1.donnerstag.substring(0,plusIndex)
+        }
+        if (file1.freitag.indexOf("+") != -1) {
+          plusIndex = file1.freitag.indexOf("+");
+          file1.freitag = file1.freitag.substring(0,plusIndex)
+        }
+        if (file1.samstag.indexOf("+") != -1) {
+          plusIndex = file1.samstag.indexOf("+");
+          file1.samstag = file1.samstag.substring(0,plusIndex)
+        }
+        if (file1.sonntag.indexOf("+") != -1) {
+          plusIndex = file1.sonntag.indexOf("+");
+          file1.sonntag = file1.sonntag.substring(0,plusIndex)
+        }
+        console.log(plusIndex);
 
         // Values used to insert data
         const values = [
@@ -195,22 +232,10 @@ async function save(file2, firstSheet) {
           file1.sonntag,
         ];
 
-        let wid = null;
         let mid = null;
+        currentRow = rowIndex;
 
         // SQL
-        // Inserting Week
-        if (rowIndex == 6) {
-          await database.query(sqlWeek, valuesWeek);
-          console.log("inserting week");
-        }
-
-        // Getting wid
-        wid = await database.query(sql);
-        console.log("getting wid");
-        wid = wid[0].wid;
-
-
         // Getting mid
         mid = await database.query(sql1, [firstName, lastName]);
         console.log("getting mid");
@@ -224,21 +249,18 @@ async function save(file2, firstSheet) {
     // commit
     await database.query("COMMIT");
     console.log("Commiting");
-    return "201";
+    return Promise.resolve("Daten erfolgreich importiert");
   } catch (error) {
     await database.query("ROLLBACK");
     console.log("Rollback");
-    if (error instanceof TypeError) {
-      return "406"
-    } else if (error.code == "ER_DUP_ENTRY") {
-      return "409";
-    } else {
-      return "500";
-    }
+    console.log(error);
+    currentRow+=1;
+    return Promise.reject(error.message.concat("Current Row:" + currentRow));
   }
 }
 
 const crypto = require("crypto");
+const { parse } = require("path");
 async function getUser(username, password) {
   if (!username || !password) {
     return Promise.reject("User not set");
