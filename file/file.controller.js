@@ -182,6 +182,16 @@ async function getMitarbeiterbyID(req,res) {
   }
 }
 
+async function updateUser(req,res) {
+  try {
+    let result = await fileModel.updateUser(req.body);
+    res.status(200).json({ message: "Benutzer erfolgreich aktualisiert", result: result })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
+}
+
 module.exports = {
   listAction,
   listUserAction,
@@ -193,5 +203,6 @@ module.exports = {
   getTaetigkeitenList,
   mitarbeiterHinzufuegen,
   getMitarbeiter,
-  getMitarbeiterbyID
+  getMitarbeiterbyID,
+  updateUser
 };

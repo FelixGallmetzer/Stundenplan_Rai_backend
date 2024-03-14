@@ -394,6 +394,22 @@ async function getMitarbeiterbyID(id) {
   }
 }
 
+async function updateUser(user) {
+  try {
+    const database = new Database(connectionProperties);
+
+    const sql = `UPDATE mitarbeiter 
+                  SET mname = ?, memail = ?, mpasswort = ?, bid = ?, mfname = ?
+                  WHERE mid = ${user.mid}`;
+
+    const result = await database.queryClose(sql, [user.mname, user.memail, user.mpasswort, user.bid, user.mfname]);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -405,5 +421,6 @@ module.exports = {
   getTaetigkeiten,
   addUser,
   getMitarbeiter,
-  getMitarbeiterbyID
+  getMitarbeiterbyID,
+  updateUser
 };
