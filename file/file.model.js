@@ -371,7 +371,7 @@ async function addUser(user) {
 async function getMitarbeiter(callback) {
   try {
     const database = new Database(connectionProperties);
-    const sql = `SELECT mname,mfname,memail,mpasswort,bid
+    const sql = `SELECT mname,mfname,memail,mpasswort,bid,mid
                   FROM mitarbeiter`;
     const result = await database.queryClose(sql);
     callback(null, result);
