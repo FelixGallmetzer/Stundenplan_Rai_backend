@@ -18,7 +18,11 @@ const {
   mitarbeiterHinzufuegen,
   getMitarbeiter,
   getMitarbeiterbyID,
-  updateUser
+  updateUser,
+  deleteUser,
+  deleteTaetigkeit,
+  taetigkeitHinzufügen,
+  updateTaetigkeit
 } = require('./file.controller.js');
 
 router.use(function(req, res, next) {
@@ -34,7 +38,19 @@ router.post('/login', loginAction);
 router.get('/statistik', statistikAction);
 router.get('/statistik/:id', getUserByID);
 router.get('/taetigkeiten', getTaetigkeitenList);
-router.post('/mitarbeiter/hinzufuegen',mitarbeiterHinzufuegen); 
+router.get('/taetigkeit/loeschen', deleteTaetigkeit);
+router.put('/taetigkeit/bearbeiten', updateTaetigkeit);
+// {
+//   "tnamealt": "A",
+//   "tnameneu": "AB",
+//   "tbeschreibung": "kdsfhjsdfbskd"
+// }
+router.post('/taetigkeiten/hinzufuegen', taetigkeitHinzufügen);
+// {
+//   "tname": "A",
+//   "tbeschreibung": "askdsjdgds"
+// }
+router.post('/mitarbeiter/hinzufuegen',mitarbeiterHinzufuegen);
 // values need to be passed in Body like this:
 // {
 //  "bid": 1,
@@ -56,6 +72,7 @@ router.put('/mitarbeiter/bearbeiten', updateUser);
 //   "mpasswort": "felix"
 
 // }
+router.delete('/mitarbeiter/loeschen', deleteUser);
 
 
 module.exports = router;

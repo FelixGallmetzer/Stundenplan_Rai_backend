@@ -367,6 +367,19 @@ async function addUser(user) {
     return error;
   }
 }
+
+async function taetigkeitHinzufügen(taetigkeit) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `INSERT INTO taetigkeitn(tname, tbeschreibung)
+                  VALUES (?, ?)`;
+    
+    const result = await database.queryClose(sql, [taetigkeit.tname, taetigkeit.tbeschreibung]);
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
   
 async function getMitarbeiter(callback) {
   try {
@@ -410,6 +423,52 @@ async function updateUser(user) {
   }
 }
 
+async function deleteTaetigkeit(taetigkeit) {
+  try {
+    const database = new Database(connectionProperties);
+
+    const sql = `DELETE FROM taetigkeiten 
+                  WHERE tname = ${taetigkeit.tname}`;
+
+    const result = await database.queryClose(sql);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+async function updateTaetigkeit(taetigkeit) {
+  try {
+    const database = new Database(connectionProperties);
+
+    const sql = `UPDATE taetigkeiten 
+                  SET tname = ?, tbeschreibung = ?
+                  WHERE tname = ${taetigkeit.tnamealt}`;
+
+    const result = await database.queryClose(sql, [taetigkeit.tnameneu, taetigkeit.tbeschreibung]);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+async function deleteUser(user) {
+  try {
+    const database = new Database(connectionProperties);
+
+    const sql = `DELETE FROM mitarbeiter 
+                  WHERE mid = ${user.mid}`;
+
+    const result = await database.queryClose(sql);
+    return result;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -422,5 +481,9 @@ module.exports = {
   addUser,
   getMitarbeiter,
   getMitarbeiterbyID,
-  updateUser
+  updateUser,
+  deleteTaetigkeit,
+  taetigkeitHinzufügen,
+  updateTaetigkeit,
+  deleteUser
 };
