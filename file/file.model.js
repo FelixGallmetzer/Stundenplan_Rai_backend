@@ -342,7 +342,7 @@ function getSpecificList(ID, callback) {
 }
 
 function getTaetigkeiten(callback) {
-  const sql = `SELECT tname 
+  const sql = `SELECT * 
               FROM taetigkeiten`;
 
   pool.query(sql, (error, result) => {
