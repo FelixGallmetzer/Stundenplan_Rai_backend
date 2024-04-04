@@ -234,7 +234,7 @@ async function updateTaetigkeit(req,res) {
 
 async function getTaetigkeit(req,res) {
   try {
-    let result = await fileModel.getMitarbeiterbyID(req.params.name);
+    let result = await fileModel.getTaetigkeit(req.params.name);
     res.status(200).json({ message: "Taetigkeit konnte erfolgreich geholt werden" , result: result });
   } catch (error) {
     console.log(error);
