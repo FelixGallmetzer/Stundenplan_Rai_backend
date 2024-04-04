@@ -224,7 +224,7 @@ async function taetigkeitHinzufügen(req,res) {
 
 async function updateTaetigkeit(req,res) {
   try {
-    let result = await fileModel.updateUser(req.body);
+    let result = await fileModel.updateTaetigkeit(req.body);
     res.status(200).json({ message: "Taetigkeit erfolgreich aktualisiert", result: result })
   } catch (error) {
     console.log(error);
