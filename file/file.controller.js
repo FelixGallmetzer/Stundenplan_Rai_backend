@@ -232,6 +232,16 @@ async function updateTaetigkeit(req,res) {
   }
 }
 
+async function getTaetigkeit(req,res) {
+  try {
+    let result = await fileModel.getMitarbeiterbyID(req.params.name);
+    res.status(200).json({ message: "Taetigkeit konnte erfolgreich geholt werden" , result: result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error });
+  }
+}
+
 module.exports = {
   listAction,
   listUserAction,
@@ -248,5 +258,6 @@ module.exports = {
   deleteUser,
   deleteTaetigkeit,
   taetigkeitHinzufügen,
-  updateTaetigkeit
+  updateTaetigkeit,
+  getTaetigkeit
 };

@@ -469,6 +469,20 @@ async function deleteUser(user) {
   }
 }
 
+async function getTaetigkeit(name) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `SELECT * 
+                  FROM taetigkeiten
+                  WHERE tname = ?`;
+    
+    const result = await database.queryClose(sql, name);
+    return result;
+  } catch (error) {
+    return error;
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -485,5 +499,6 @@ module.exports = {
   deleteTaetigkeit,
   taetigkeitHinzufügen,
   updateTaetigkeit,
-  deleteUser
+  deleteUser,
+  getTaetigkeit
 };

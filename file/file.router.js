@@ -22,7 +22,8 @@ const {
   deleteUser,
   deleteTaetigkeit,
   taetigkeitHinzufügen,
-  updateTaetigkeit
+  updateTaetigkeit,
+  getTaetigkeit
 } = require('./file.controller.js');
 
 router.use(function(req, res, next) {
@@ -38,6 +39,7 @@ router.post('/login', loginAction);
 router.get('/statistik', statistikAction);
 router.get('/statistik/:id', getUserByID);
 router.get('/taetigkeiten', getTaetigkeitenList);
+router.get('/taetigkeit/:name', getTaetigkeit);
 router.get('/taetigkeit/loeschen', deleteTaetigkeit);
 router.put('/taetigkeit/bearbeiten', updateTaetigkeit);
 // {
