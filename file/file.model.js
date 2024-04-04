@@ -428,7 +428,7 @@ async function deleteTaetigkeit(taetigkeit) {
     const database = new Database(connectionProperties);
 
     const sql = `DELETE FROM taetigkeiten 
-                  WHERE tname = (${taetigkeit.tname})`;
+                  WHERE tname = ${taetigkeit.tname}`;
 
     const result = await database.queryClose(sql);
     return result;
@@ -444,9 +444,9 @@ async function updateTaetigkeit(taetigkeit) {
 
     const sql = `UPDATE taetigkeiten 
                   SET tname = ?, tbeschreibung = ?
-                  WHERE tname = ${taetigkeit.tnamealt}`;
+                  WHERE (tname = ?)`;
 
-    const result = await database.queryClose(sql, [taetigkeit.tnameneu, taetigkeit.tbeschreibung]);
+    const result = await database.queryClose(sql, [taetigkeit.tnameneu, taetigkeit.tbeschreibung, taetigkeit.tnamealt]);
     return result;
   } catch (error) {
     console.log(error);
