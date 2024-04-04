@@ -428,7 +428,7 @@ async function deleteTaetigkeit(taetigkeit) {
     const database = new Database(connectionProperties);
 
     const sql = `DELETE FROM taetigkeiten 
-                  WHERE tname = ${taetigkeit.tname}`;
+                  WHERE tname = (${taetigkeit.tname})`;
 
     const result = await database.queryClose(sql);
     return result;
