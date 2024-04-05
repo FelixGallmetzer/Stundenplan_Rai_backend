@@ -194,7 +194,7 @@ async function updateUser(req,res) {
 
 async function deleteUser(req,res) {
   try {
-    let result = await fileModel.deleteUser(req.body);
+    let result = await fileModel.deleteUser(req.params.id);
     res.status(200).json({ message: "Benutzer erfolgreich gelöscht", result: result })
   } catch (error) {
     console.log(error);
@@ -204,7 +204,7 @@ async function deleteUser(req,res) {
 
 async function deleteTaetigkeit(req,res){
   try {
-    let result = await fileModel.deleteTaetigkeit(req.body);
+    let result = await fileModel.deleteTaetigkeit(req.params.tname);
     res.status(200).json({ message: "Taetigkeit erfolgreich gelöscht", result: result })
   } catch (error) {
     console.log(error);

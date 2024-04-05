@@ -40,7 +40,7 @@ router.get('/statistik', statistikAction);
 router.get('/statistik/:id', getUserByID);
 router.get('/taetigkeiten', getTaetigkeitenList);
 router.get('/taetigkeit/:name', getTaetigkeit);
-router.get('/taetigkeit/loeschen', deleteTaetigkeit);
+router.get('/taetigkeit/loeschen/:tname', deleteTaetigkeit);
 router.put('/taetigkeit/bearbeiten', updateTaetigkeit);
 // {
 //   "tnamealt": "A",
@@ -74,7 +74,7 @@ router.put('/mitarbeiter/bearbeiten', updateUser);
 //   "mpasswort": "felix"
 
 // }
-router.delete('/mitarbeiter/loeschen', deleteUser);
+router.delete('/mitarbeiter/loeschen/:id', deleteUser);
 
 
 module.exports = router;
