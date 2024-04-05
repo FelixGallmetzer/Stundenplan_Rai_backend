@@ -423,12 +423,12 @@ async function updateUser(user) {
   }
 }
 
-async function deleteTaetigkeit(taetigkeit) {
+async function deleteTaetigkeit(tname) {
   try {
     const database = new Database(connectionProperties);
 
     const sql = `DELETE FROM taetigkeiten 
-                  WHERE tname = ${taetigkeit.tname}`;
+                  WHERE tname = ${tname}`;
 
     const result = await database.queryClose(sql);
     return result;
@@ -454,12 +454,12 @@ async function updateTaetigkeit(taetigkeit) {
   }
 }
 
-async function deleteUser(user) {
+async function deleteUser(mid) {
   try {
     const database = new Database(connectionProperties);
 
     const sql = `DELETE FROM mitarbeiter 
-                  WHERE mid = ${user.mid}`;
+                  WHERE mid = ${mid}`;
 
     const result = await database.queryClose(sql);
     return result;
