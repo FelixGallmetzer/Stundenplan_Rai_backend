@@ -74,7 +74,7 @@ router.put('/mitarbeiter/bearbeiten', updateUser);
 //   "mpasswort": "felix"
 
 // }
-router.delete('/mitarbeiter/loeschen/:id', deleteUser);
+router.get('/mitarbeiter/loeschen/:id', deleteUser);
 
 
 module.exports = router;
