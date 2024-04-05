@@ -215,7 +215,7 @@ async function deleteTaetigkeit(req,res){
 async function taetigkeitHinzufügen(req,res) {
   try {
     let result = await fileModel.taetigkeitHinzufügen(req.body);
-    res.status(200).json({ message: "Taetigkeit erfolgreich hinzugefügt"});
+    res.status(200).json({ message: "Taetigkeit erfolgreich hinzugefügt",result:result});
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error });

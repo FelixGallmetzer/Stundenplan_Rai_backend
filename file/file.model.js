@@ -371,7 +371,7 @@ async function addUser(user) {
 async function taetigkeitHinzufügen(taetigkeit) {
   try {
     const database = new Database(connectionProperties);
-    const sql = `INSERT INTO taetigkeitn(tname, tbeschreibung)
+    const sql = `INSERT INTO taetigkeiten(tname, tbeschreibung)
                   VALUES (?, ?)`;
     
     const result = await database.queryClose(sql, [taetigkeit.tname, taetigkeit.tbeschreibung]);
