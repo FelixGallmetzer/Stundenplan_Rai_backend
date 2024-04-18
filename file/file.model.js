@@ -16,6 +16,8 @@ const pool = mysql.createPool({
   database: "de7rtnl9b2hldxvv",
 });
 
+const crypto = require("crypto");
+
 class Database {
   constructor(connectionProperties) {
     this.connection = mysql.createConnection(connectionProperties);
@@ -259,7 +261,6 @@ async function save(file2, firstSheet) {
   }
 }
 
-const crypto = require("crypto");
 const { parse } = require("path");
 async function getUser(username, password) {
   if (!username || !password) {
@@ -411,11 +412,16 @@ async function updateUser(user) {
   try {
     const database = new Database(connectionProperties);
 
+    const passwordHash = crypto
+    .createHash("sha256")
+    .update(user.mpassword)
+    .digest("hex");
+
     const sql = `UPDATE mitarbeiter 
                   SET mname = ?, memail = ?, mpasswort = ?, bid = ?, mfname = ?
                   WHERE mid = ${user.mid}`;
 
-    const result = await database.queryClose(sql, [user.mname, user.memail, user.mpasswort, user.bid, user.mfname]);
+    const result = await database.queryClose(sql, [user.mname, user.memail, passwordHash, user.bid, user.mfname]);
     return result;
   } catch (error) {
     console.log(error);
