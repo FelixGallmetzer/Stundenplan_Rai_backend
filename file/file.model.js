@@ -275,8 +275,6 @@ async function getUser(username, password) {
         FROM mitarbeiter
         WHERE memail = ? AND mpasswort = ?
         `;
-    console.log(password, passwordHash);
-
     return new Promise((resolve, reject) => {
       pool.query(sql, [username, passwordHash], (error, result) => {
         if (error) {
