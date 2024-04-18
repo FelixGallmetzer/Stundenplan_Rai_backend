@@ -44,6 +44,9 @@ async function importAction(request, response) {
   fileModel.save(file,firstSheet)
     .then(result => response.json(result))
     .catch(error => {
+      if (error.includes("ER_DUP_ENTRY")) {
+        error = "Datei wurde bereits hochgeladen";
+      }
       if (error.includes("arbeiterwochen_ibfk_3")) {
         let rowIndex = error.indexOf("Current Row:") + 12;
         let row = error.substring(rowIndex);
@@ -72,6 +75,8 @@ async function importAction(request, response) {
         let rowIndex = error.indexOf("Current Row:") + 12;
         let row = error.substring(rowIndex);
         error = "Das Feld bei Zeile " + row + " Spalte 8 konnte nicht gelesen werden"
+      } else {
+        error = "Unbekannter Fehler ist aufgetreten!"
       }
       response.status(400).json(error)
     })
