@@ -414,7 +414,7 @@ async function updateUser(user) {
 
     const passwordHash = crypto
     .createHash("sha256")
-    .update(user.mpassword)
+    .update(user.mpassword + "")
     .digest("hex");
 
     const sql = `UPDATE mitarbeiter 
