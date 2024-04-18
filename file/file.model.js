@@ -271,10 +271,11 @@ async function getUser(username, password) {
       .update(password)
       .digest("hex");
     const sql = `
-        SELECT uid, uusername, ufirstname, ulastname, upasswordhash
-        FROM users
-        WHERE uusername = ? AND upasswordhash = ?
+        SELECT mid, mname, mfname, mpasswort, memail
+        FROM mitarbeiter
+        WHERE memail = ? AND mpasswort = ?
         `;
+    console.log(password, passwordHash);
 
     return new Promise((resolve, reject) => {
       pool.query(sql, [username, passwordHash], (error, result) => {
@@ -414,7 +415,7 @@ async function updateUser(user) {
 
     const passwordHash = crypto
     .createHash("sha256")
-    .update(user.mpassword + "")
+    .update(user.mpasswort)
     .digest("hex");
 
     const sql = `UPDATE mitarbeiter 
