@@ -46,8 +46,7 @@ async function importAction(request, response) {
     .catch(error => {
       if (error.includes("ER_DUP_ENTRY")) {
         error = "Datei wurde bereits hochgeladen";
-      }
-      if (error.includes("arbeiterwochen_ibfk_3")) {
+      } else if (error.includes("arbeiterwochen_ibfk_3")) {
         let rowIndex = error.indexOf("Current Row:") + 12;
         let row = error.substring(rowIndex);
         error = "Das Feld bei Zeile " + row + " Spalte 2 konnte nicht gelesen werden"
