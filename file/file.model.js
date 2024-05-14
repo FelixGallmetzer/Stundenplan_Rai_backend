@@ -488,6 +488,27 @@ async function getTaetigkeit(name) {
   }
 }
 
+async function getStundenplan(mid) {
+  try {
+    const database = new Database(connectionProperties);
+    const sql = `SELECT awmontag, awdienstag, awmittwoch, awdonnerstag, awfreitag, awsamstag, awsonntag
+                  FROM arbeiterwochen
+                  WHERE mid = ? 
+                  AND wid = (
+                      SELECT wid
+                      FROM wochenplaene
+                      WHERE wwochenstartdatum = (
+                          SELECT MAX(wwochenstartdatum)
+                          FROM wochenplaene
+                      )
+                  );`
+    const result = await database.queryClose(sql, mid);
+    return Promise.resolve(result);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+
 module.exports = {
   getAll,
   remove,
@@ -505,5 +526,6 @@ module.exports = {
   taetigkeitHinzufügen,
   updateTaetigkeit,
   deleteUser,
-  getTaetigkeit
+  getTaetigkeit,
+  getStundenplan
 };

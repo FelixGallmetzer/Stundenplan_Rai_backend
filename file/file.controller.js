@@ -246,6 +246,16 @@ async function getTaetigkeit(req,res) {
   }
 }
 
+async function getStundenplan(req,res) {
+  try {
+    let result = await fileModel.getStundenplan(req.params.mid);
+    res.status(200).json({ message: "Stundenplan erfolgreicht geholt" ,result:result })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error:error });
+  }
+}
+
 module.exports = {
   listAction,
   listUserAction,
@@ -263,5 +273,6 @@ module.exports = {
   deleteTaetigkeit,
   taetigkeitHinzufügen,
   updateTaetigkeit,
-  getTaetigkeit
+  getTaetigkeit,
+  getStundenplan
 };

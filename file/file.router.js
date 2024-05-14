@@ -23,7 +23,8 @@ const {
   deleteTaetigkeit,
   taetigkeitHinzufügen,
   updateTaetigkeit,
-  getTaetigkeit
+  getTaetigkeit,
+  getStundenplan
 } = require('./file.controller.js');
 
 router.use(function(req, res, next) {
@@ -75,6 +76,7 @@ router.put('/mitarbeiter/bearbeiten', updateUser);
 
 // }
 router.get('/mitarbeiter/loeschen/:id', deleteUser);
+router.get('/stundenplan/:mid', getStundenplan);
 
 
 module.exports = router;
