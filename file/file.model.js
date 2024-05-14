@@ -362,9 +362,9 @@ async function addUser(user) {
                   VALUES (?, ?, ?, ?, ?)`;
     
     const result = await database.queryClose(sql, [user.bid, user.memail, user.mfname, user.mname, user.mpasswort]);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
-    return error;
+    return Promise.reject(error);
   }
 }
 
@@ -375,9 +375,9 @@ async function taetigkeitHinzufügen(taetigkeit) {
                   VALUES (?, ?)`;
     
     const result = await database.queryClose(sql, [taetigkeit.tname, taetigkeit.tbeschreibung]);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
-    return error;
+    return Promise.reject(error);
   }
 }
   
@@ -401,9 +401,9 @@ async function getMitarbeiterbyID(id) {
                   WHERE mid = ?`;
     
     const result = await database.queryClose(sql, id);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
-    return error;
+    return Promise.reject(error);
   }
 }
 
@@ -421,10 +421,10 @@ async function updateUser(user) {
                   WHERE mid = ${user.mid}`;
 
     const result = await database.queryClose(sql, [user.mname, user.memail, passwordHash, user.bid, user.mfname]);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
     console.log(error);
-    return error;
+    return Promise.reject(error);
   }
 }
 
@@ -436,10 +436,10 @@ async function deleteTaetigkeit(tname) {
                   WHERE (tname = ?)`;
 
     const result = await database.queryClose(sql, [tname]);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
     console.log(error);
-    return error;
+    return Promise.reject(error);
   }
 }
 
@@ -452,10 +452,10 @@ async function updateTaetigkeit(taetigkeit) {
                   WHERE (tname = ?)`;
 
     const result = await database.queryClose(sql, [taetigkeit.tnameneu, taetigkeit.tbeschreibung, taetigkeit.tnamealt]);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
     console.log(error);
-    return error;
+    return Promise.reject(error);
   }
 }
 
@@ -467,10 +467,10 @@ async function deleteUser(mid) {
                   WHERE mid = ${mid}`;
 
     const result = await database.queryClose(sql);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
     console.log(error);
-    return error;
+    return Promise.reject(error);
   }
 }
 
@@ -482,9 +482,9 @@ async function getTaetigkeit(name) {
                   WHERE tname = ?`;
     
     const result = await database.queryClose(sql, name);
-    return result;
+    return Promise.resolve(result);
   } catch (error) {
-    return error;
+    return Promise.reject(error);
   }
 }
 
