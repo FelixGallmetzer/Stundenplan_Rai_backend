@@ -252,7 +252,7 @@ async function getStundenplan(req,res) {
     res.status(200).json({ message: "Stundenplan erfolgreicht geholt" ,result:result })
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error:error });
+    res.status(500).json({ error:error, message: "Fehler ist aufgetreten"});
   }
 }
 
