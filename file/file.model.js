@@ -358,10 +358,17 @@ function getTaetigkeiten(callback) {
 async function addUser(user) {
   try {
     const database = new Database(connectionProperties);
+
+    const passwordHash = crypto
+    .createHash("sha256")
+    .update(user.mpasswort)
+    .digest("hex");
+
+
     const sql = `INSERT INTO mitarbeiter(bid, memail, mfname, mname, mpasswort)
                   VALUES (?, ?, ?, ?, ?)`;
     
-    const result = await database.queryClose(sql, [user.bid, user.memail, user.mfname, user.mname, user.mpasswort]);
+    const result = await database.queryClose(sql, [user.bid, user.memail, user.mfname, user.mname, passwordHash]);
     return Promise.resolve(result);
   } catch (error) {
     return Promise.reject(error);
