@@ -8,14 +8,6 @@ const connectionProperties = {
   database: "de7rtnl9b2hldxvv",
 };
 
-const pool = mysql.createPool({
-  connectionLimit: 3,
-  host: "ulsq0qqx999wqz84.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
-  user: "g5ec4ljgfr0kwo61",
-  password: "mae6mu11wtk59d7k",
-  database: "de7rtnl9b2hldxvv",
-});
-
 const crypto = require("crypto");
 
 class Database {
@@ -72,7 +64,9 @@ async function save(file2, firstSheet) {
         const baseDate = new Date("1904-01-01");
         const parsedXLSdate = parseFloat(XLSdate, 10);
         if (!parsedXLSdate) {
-          throw new Error("Das Datum für den Wochenanfang konnte nicht gelesen werden");
+          throw new Error(
+            "Das Datum für den Wochenanfang konnte nicht gelesen werden"
+          );
         }
         date = addDays(baseDate, parsedXLSdate);
 
@@ -106,10 +100,8 @@ async function save(file2, firstSheet) {
         console.log("inserting week");
 
         wid = result.insertId;
-
       }
       if (!endeerreicht && rowIndex > 5) {
-
         const file1 = {
           name: row[0] !== undefined ? row[0] : "",
           montag: row[1] !== undefined ? row[1].toUpperCase() : "",
@@ -118,7 +110,7 @@ async function save(file2, firstSheet) {
           donnerstag: row[4] !== undefined ? row[4].toUpperCase() : "",
           freitag: row[5] !== undefined ? row[5].toUpperCase() : "",
           samstag: row[6] !== undefined ? row[6].toUpperCase() : "",
-          sonntag: row[7] !== undefined ? row[7].toUpperCase() : ""
+          sonntag: row[7] !== undefined ? row[7].toUpperCase() : "",
         };
         const shortenDay = (day) => {
           const index = file1[day].indexOf(" ");
@@ -173,14 +165,6 @@ async function save(file2, firstSheet) {
         lastName = lastName.trim();
         firstName = firstName.trim();
 
-        // DO NOT DELETE!!!!!!!!!!!!!!!!!!!!!!!!
-        // const sql = `
-        // INSERT INTO mitarbeiter(mname,mfname,bid)
-        // VALUES(?,?,?)`
-        // pool.query(sql, [firstName,lastName,1], error => {
-        //   console.log(error);
-        // });
-
         // sql Query to get mid from DB
         const sql1 = `
          SELECT mid
@@ -191,35 +175,35 @@ async function save(file2, firstSheet) {
         const sql2 = `
          INSERT INTO arbeiterwochen(wid, mid, awmontag, awdienstag, awmittwoch, awdonnerstag, awfreitag, awsamstag, awsonntag)
          VALUES (?,?,?,?,?,?,?,?,?)`;
-        
+
         let plusIndex = null;
         if (file1.montag.indexOf("+") != -1) {
           plusIndex = file1.montag.indexOf("+");
-          file1.montag = file1.montag.substring(0,plusIndex)
+          file1.montag = file1.montag.substring(0, plusIndex);
         }
         if (file1.dienstag.indexOf("+") != -1) {
           plusIndex = file1.dienstag.indexOf("+");
-          file1.dienstag = file1.dienstag.substring(0,plusIndex)
+          file1.dienstag = file1.dienstag.substring(0, plusIndex);
         }
         if (file1.mittwoch.indexOf("+") != -1) {
           plusIndex = file1.mittwoch.indexOf("+");
-          file1.mittwoch = file1.mittwoch.substring(0,plusIndex)
+          file1.mittwoch = file1.mittwoch.substring(0, plusIndex);
         }
         if (file1.donnerstag.indexOf("+") != -1) {
           plusIndex = file1.donnerstag.indexOf("+");
-          file1.donnerstag = file1.donnerstag.substring(0,plusIndex)
+          file1.donnerstag = file1.donnerstag.substring(0, plusIndex);
         }
         if (file1.freitag.indexOf("+") != -1) {
           plusIndex = file1.freitag.indexOf("+");
-          file1.freitag = file1.freitag.substring(0,plusIndex)
+          file1.freitag = file1.freitag.substring(0, plusIndex);
         }
         if (file1.samstag.indexOf("+") != -1) {
           plusIndex = file1.samstag.indexOf("+");
-          file1.samstag = file1.samstag.substring(0,plusIndex)
+          file1.samstag = file1.samstag.substring(0, plusIndex);
         }
         if (file1.sonntag.indexOf("+") != -1) {
           plusIndex = file1.sonntag.indexOf("+");
-          file1.sonntag = file1.sonntag.substring(0,plusIndex)
+          file1.sonntag = file1.sonntag.substring(0, plusIndex);
         }
         console.log(plusIndex);
 
@@ -256,31 +240,29 @@ async function save(file2, firstSheet) {
     await database.query("ROLLBACK");
     console.log("Rollback");
     console.log(error);
-    currentRow+=1;
+    currentRow += 1;
     return Promise.reject(error.message.concat("Current Row:" + currentRow));
   }
 }
 
 async function getUser(username, password) {
-  if (!username || !password) {
-    return Promise.reject("User not set");
-  } else {
-    const passwordHash = crypto
-      .createHash("sha256")
-      .update(password)
-      .digest("hex");
-    const sql = `
-        SELECT mid, mname, mfname, mpasswort, memail, bid
-        FROM mitarbeiter
-        WHERE memail = ? AND mpasswort = ?
-        `;
-    return new Promise((resolve, reject) => {
-      pool.query(sql, [username, passwordHash], (error, result) => {
-        if (error) {
-          console.log("Error in query:", error);
-          reject("Database error");
-          return;
-        }
+  try {
+    console.log("1");
+    let database = new Database(connectionProperties);
+    if (!username || !password) {
+      return Promise.reject("User not set");
+    } else {
+      const passwordHash = crypto
+        .createHash("sha256")
+        .update(password)
+        .digest("hex");
+      const sql = `
+          SELECT mid, mname, mfname, mpasswort, memail, bid
+          FROM mitarbeiter
+          WHERE memail = ? AND mpasswort = ?
+          `;
+      return new Promise(async (resolve, reject) => {
+        result = await database.query(sql, [username, passwordHash]);
 
         if (!result || result.length === 0) {
           reject("User not found");
@@ -288,7 +270,9 @@ async function getUser(username, password) {
           resolve(result[0]);
         }
       });
-    });
+    }
+  } catch (error) {
+    return Promise.reject(error);
   }
 }
 
@@ -302,56 +286,54 @@ function get(uid) {
   return data.find((file) => file.uid === uid);
 }
 
-function getUserList(callback) {
-  const sql = `
-  select m.mid as mid,mfname,mname,awdienst,COUNT(*) as count
-	FROM viewarbeitswochen aw, mitarbeiter m
-    WHERE aw.mid = m.mid
-    GROUP BY mfname,mname,awdienst
-    ORDER BY 1,2,4 DESC
-`;
-
-  pool.query(sql, (error, result) => {
-    if (error) {
-      console.log("Error in query", error);
-      callback("Database error", null);
-    } else {
-      callback(null, result);
-    }
-  });
-}
-
-function getSpecificList(ID, callback) {
-  const sql = `
-  select m.mid as mid,mfname,mname,awdienst,COUNT(*) AS count
-	FROM viewarbeitswochen aw, mitarbeiter m
-    WHERE aw.mid = m.mid
-    GROUP BY mfname,mname,awdienst
-    ORDER BY 1,2,4 DESC 
+async function getUserList(callback) {
+  try {
+    let database = new Database(connectionProperties);
+    const sql = `
+    select m.mid as mid,mfname,mname,awdienst,COUNT(*) as count
+    FROM viewarbeitswochen aw, mitarbeiter m
+      WHERE aw.mid = m.mid
+      GROUP BY mfname,mname,awdienst
+      ORDER BY 1,2,4 DESC
   `;
 
-  pool.query(sql, (error, result) => {
-    if (error) {
-      console.log("Error in query", error);
-      callback("Database error", null);
-    } else {
-      callback(null, result);
-    }
-  });
+    result = await database.queryClose(sql);
+    callback(null, result);
+  } catch (error) {
+    callback("Database error", null);
+  }
 }
 
-function getTaetigkeiten(callback) {
-  const sql = `SELECT * 
-              FROM taetigkeiten`;
+async function getSpecificList(ID, callback) {
+  try {
+    let database = new Database(connectionProperties);
+    const sql = `
+    select m.mid as mid,mfname,mname,awdienst,COUNT(*) AS count
+    FROM viewarbeitswochen aw, mitarbeiter m
+      WHERE aw.mid = m.mid
+      GROUP BY mfname,mname,awdienst
+      ORDER BY 1,2,4 DESC 
+    `;
 
-  pool.query(sql, (error, result) => {
-    if (error) {
-      console.log("Error in query", error);
-      callback("Database error", null);
-    } else {
-      callback(null, result);
-    }
-  });
+    result = await database.queryClose(sql);
+    callback(null, result);
+  } catch (error) {
+    callback("Database error", null);
+  }
+}
+
+async function getTaetigkeiten(callback) {
+  try {
+    let database = new Database(connectionProperties);
+    const sql = `SELECT * 
+                FROM taetigkeiten`;
+
+    result = await database.queryClose(sql);
+
+    callback(null, result);
+  } catch (error) {
+    callback("Database error", null);
+  }
 }
 
 async function addUser(user) {
@@ -359,15 +341,20 @@ async function addUser(user) {
     const database = new Database(connectionProperties);
 
     const passwordHash = crypto
-    .createHash("sha256")
-    .update(user.mpasswort)
-    .digest("hex");
-
+      .createHash("sha256")
+      .update(user.mpasswort)
+      .digest("hex");
 
     const sql = `INSERT INTO mitarbeiter(bid, memail, mfname, mname, mpasswort)
                   VALUES (?, ?, ?, ?, ?)`;
-    
-    const result = await database.queryClose(sql, [user.bid, user.memail, user.mfname, user.mname, passwordHash]);
+
+    const result = await database.queryClose(sql, [
+      user.bid,
+      user.memail,
+      user.mfname,
+      user.mname,
+      passwordHash,
+    ]);
     return Promise.resolve(result);
   } catch (error) {
     return Promise.reject(error);
@@ -379,14 +366,17 @@ async function taetigkeitHinzufügen(taetigkeit) {
     const database = new Database(connectionProperties);
     const sql = `INSERT INTO taetigkeiten(tname, tbeschreibung)
                   VALUES (?, ?)`;
-    
-    const result = await database.queryClose(sql, [taetigkeit.tname, taetigkeit.tbeschreibung]);
+
+    const result = await database.queryClose(sql, [
+      taetigkeit.tname,
+      taetigkeit.tbeschreibung,
+    ]);
     return Promise.resolve(result);
   } catch (error) {
     return Promise.reject(error);
   }
 }
-  
+
 async function getMitarbeiter(callback) {
   try {
     const database = new Database(connectionProperties);
@@ -405,7 +395,7 @@ async function getMitarbeiterbyID(id) {
     const sql = `SELECT * 
                   FROM mitarbeiter
                   WHERE mid = ?`;
-    
+
     const result = await database.queryClose(sql, id);
     return Promise.resolve(result);
   } catch (error) {
@@ -418,15 +408,21 @@ async function updateUser(user) {
     const database = new Database(connectionProperties);
 
     const passwordHash = crypto
-    .createHash("sha256")
-    .update(user.mpasswort)
-    .digest("hex");
+      .createHash("sha256")
+      .update(user.mpasswort)
+      .digest("hex");
 
     const sql = `UPDATE mitarbeiter 
                   SET mname = ?, memail = ?, mpasswort = ?, bid = ?, mfname = ?
                   WHERE mid = ${user.mid}`;
 
-    const result = await database.queryClose(sql, [user.mname, user.memail, passwordHash, user.bid, user.mfname]);
+    const result = await database.queryClose(sql, [
+      user.mname,
+      user.memail,
+      passwordHash,
+      user.bid,
+      user.mfname,
+    ]);
     return Promise.resolve(result);
   } catch (error) {
     console.log(error);
@@ -457,7 +453,11 @@ async function updateTaetigkeit(taetigkeit) {
                   SET tname = ?, tbeschreibung = ?
                   WHERE (tname = ?)`;
 
-    const result = await database.queryClose(sql, [taetigkeit.tnameneu, taetigkeit.tbeschreibung, taetigkeit.tnamealt]);
+    const result = await database.queryClose(sql, [
+      taetigkeit.tnameneu,
+      taetigkeit.tbeschreibung,
+      taetigkeit.tnamealt,
+    ]);
     return Promise.resolve(result);
   } catch (error) {
     console.log(error);
@@ -486,7 +486,7 @@ async function getTaetigkeit(name) {
     const sql = `SELECT * 
                   FROM taetigkeiten
                   WHERE tname = ?`;
-    
+
     const result = await database.queryClose(sql, name);
     return Promise.resolve(result);
   } catch (error) {
@@ -507,7 +507,7 @@ async function getStundenplan(mid) {
                           SELECT MAX(wwochenstartdatum)
                           FROM wochenplaene
                       )
-                  );`
+                  );`;
     const result = await database.queryClose(sql, mid);
     return Promise.resolve(result);
   } catch (error) {
@@ -533,5 +533,5 @@ module.exports = {
   updateTaetigkeit,
   deleteUser,
   getTaetigkeit,
-  getStundenplan
+  getStundenplan,
 };
