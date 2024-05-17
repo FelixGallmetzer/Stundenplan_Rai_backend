@@ -270,7 +270,7 @@ async function getUser(username, password) {
       .update(password)
       .digest("hex");
     const sql = `
-        SELECT mid, mname, mfname, mpasswort, memail
+        SELECT mid, mname, mfname, mpasswort, memail, bid
         FROM mitarbeiter
         WHERE memail = ? AND mpasswort = ?
         `;
