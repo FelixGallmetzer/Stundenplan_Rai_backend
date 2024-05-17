@@ -261,7 +261,6 @@ async function save(file2, firstSheet) {
   }
 }
 
-const { parse } = require("path");
 async function getUser(username, password) {
   if (!username || !password) {
     return Promise.reject("User not set");

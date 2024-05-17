@@ -109,10 +109,11 @@ function loginAction(request, response) {
     .getUser(ur.na, ur.pw)
     .then((result) => {
       const jwtToken = jwt.sign(
-        { na: result.uusername, id: result.uid },
+        { na: result.memail, id: result.mid },
         PASSWORD,
         { expiresIn: EXPIRES_IN, algorithm: ALGORITHM }
       );
+      console.log(result.memail, result.mid);
       response.send({ jwt: jwtToken });
     })
     .catch((error) => response.status(401).send("unauthorized"));
