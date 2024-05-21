@@ -79,20 +79,6 @@ async function importAction(request, response) {
       }
       response.status(400).json(error)
     })
-  // console.log("saving");
-  // console.log(file.data);
-  // result = await fileModel.save(file, firstSheet);
-  // if (result === "201") {
-  //   return response.status(201).json({ message: 'Erfolgreich Importiert' });
-  // } else if (result === "500") {
-  //   return response.status(500).json({ message: 'Ein interner Fehler ist aufgetreten, bitte versuche es nochmal' });
-  // } else if (result === "409") {
-  //   return response.status(409).json({ message: 'Stundenplan wurde bereit hochgeladen'});
-  // } else if (result === "406") {
-  //   return response.status(406).json({ message: 'Etwas im Stundenplan ist nicht ausgefüllt oder wurde nicht richtig formatiert'});
-  // }
-
-  // response.redirect(request.baseUrl);
 }
 
 
@@ -122,7 +108,6 @@ function statistikAction(req, res) {
   // Call getUserList from the database module
   fileModel.getUserList((error, result) => {
     if (error) {
-      // console.log(error);
       res.status(500).json({ error: error });
     } else {
       res.json(result);

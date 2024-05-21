@@ -57,7 +57,6 @@ async function save(file2, firstSheet) {
       if (row[0] == "Studio") {
         endeerreicht = true;
       }
-      // console.log(rowIndex);
       if (!endeerreicht && rowIndex == 1) {
         //getting Startdate
         const XLSdate = row[6];
@@ -97,7 +96,6 @@ async function save(file2, firstSheet) {
 
         // Inserting Week
         result = await database.query(sqlWeek, valuesWeek);
-        console.log("inserting week");
 
         wid = result.insertId;
       }
@@ -205,7 +203,6 @@ async function save(file2, firstSheet) {
           plusIndex = file1.sonntag.indexOf("+");
           file1.sonntag = file1.sonntag.substring(0, plusIndex);
         }
-        console.log(plusIndex);
 
         // Values used to insert data
         const values = [
@@ -224,21 +221,17 @@ async function save(file2, firstSheet) {
         // SQL
         // Getting mid
         mid = await database.query(sql1, [firstName, lastName]);
-        console.log("getting mid");
         mid = mid[0].mid;
 
         // Inserting Row
         await database.query(sql2, [wid, mid, ...values]);
-        console.log("inserting row");
       }
     }
     // commit
     await database.query("COMMIT");
-    console.log("Commiting");
     return Promise.resolve("Daten erfolgreich importiert");
   } catch (error) {
-    await database.query("ROLLBACK");
-    console.log("Rollback");
+    await database.query("ROLLBACK");;
     console.log(error);
     currentRow += 1;
     return Promise.reject(error.message.concat("Current Row:" + currentRow));
@@ -247,7 +240,6 @@ async function save(file2, firstSheet) {
 
 async function getUser(username, password) {
   try {
-    console.log("1");
     let database = new Database(connectionProperties);
     if (!username || !password) {
       return Promise.reject("User not set");
