@@ -497,10 +497,11 @@ async function getTaetigkeit(name) {
 async function getStundenplan(mid) {
   try {
     const database = new Database(connectionProperties);
-    const sql = `SELECT awmontag, awdienstag, awmittwoch, awdonnerstag, awfreitag, awsamstag, awsonntag
-                  FROM arbeiterwochen
+    const sql = `SELECT awmontag, awdienstag, awmittwoch, awdonnerstag, awfreitag, awsamstag, awsonntag, wwochenstartdatum
+                  FROM arbeiterwochen, wochenplaene
                   WHERE mid = ? 
-                  AND wid = (
+                  AND arbeiterwochen.wid = wochenplaene.wid
+                  AND arbeiterwochen.wid = (
                       SELECT wid
                       FROM wochenplaene
                       WHERE wwochenstartdatum = (
