@@ -2,10 +2,10 @@ const mysql = require("mysql");
 
 const connectionProperties = {
   connectionLimit: 3,
-  host: "ulsq0qqx999wqz84.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
-  user: "g5ec4ljgfr0kwo61",
-  password: "mae6mu11wtk59d7k",
-  database: "de7rtnl9b2hldxvv",
+  host: "https://server.tfobz.net/phpmyadmin",
+  user: "c0nodestdplan",
+  password: "Fbzb#N29",
+  database: "c0stdplandb1",
 };
 
 const crypto = require("crypto");
