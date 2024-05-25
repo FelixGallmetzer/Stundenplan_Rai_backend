@@ -2,10 +2,10 @@ const mysql = require("mysql");
 
 const connectionProperties = {
   connectionLimit: 3,
-  host: "https://server.tfobz.net/phpmyadmin",
-  user: "c0nodestdplan",
-  password: "Fbzb#N29",
-  database: "c0stdplandb1",
+  host: "ulsq0qqx999wqz84.chr7pe7iynqr.eu-west-1.rds.amazonaws.com",
+  user: "g5ec4ljgfr0kwo61",
+  password: "mae6mu11wtk59d7k",
+  database: "de7rtnl9b2hldxvv",
 };
 
 const crypto = require("crypto");
@@ -48,6 +48,7 @@ async function save(file2, firstSheet) {
   let database;
   let wid = null;
   let currentRow = null;
+  let slqresult = null;
 
   try {
     database = new Database(connectionProperties);
@@ -57,6 +58,7 @@ async function save(file2, firstSheet) {
       if (row[0] == "Studio") {
         endeerreicht = true;
       }
+      // console.log(rowIndex);
       if (!endeerreicht && rowIndex == 1) {
         //getting Startdate
         const XLSdate = row[6];
@@ -96,6 +98,7 @@ async function save(file2, firstSheet) {
 
         // Inserting Week
         result = await database.query(sqlWeek, valuesWeek);
+        console.log("inserting week");
 
         wid = result.insertId;
       }
@@ -203,6 +206,7 @@ async function save(file2, firstSheet) {
           plusIndex = file1.sonntag.indexOf("+");
           file1.sonntag = file1.sonntag.substring(0, plusIndex);
         }
+        console.log(plusIndex);
 
         // Values used to insert data
         const values = [
@@ -221,17 +225,24 @@ async function save(file2, firstSheet) {
         // SQL
         // Getting mid
         mid = await database.query(sql1, [firstName, lastName]);
+        console.log("getting mid");
         mid = mid[0].mid;
 
         // Inserting Row
-        await database.query(sql2, [wid, mid, ...values]);
+        slqresult = await database.query(sql2, [wid, mid, ...values]);
+        console.log("inserting row");
       }
     }
-    // commit
+    // todo: affectedrows manchmal undefined
+    if (slqresult.affectedRows < 1) {
+      throw new Error("Unbekannter Fehler. Versuchen Sie es später erneut");
+    }
     await database.query("COMMIT");
+    console.log("Commiting");
     return Promise.resolve("Daten erfolgreich importiert");
   } catch (error) {
-    await database.query("ROLLBACK");;
+    await database.query("ROLLBACK");
+    console.log("Rollback");
     console.log(error);
     currentRow += 1;
     return Promise.reject(error.message.concat("Current Row:" + currentRow));
@@ -240,6 +251,7 @@ async function save(file2, firstSheet) {
 
 async function getUser(username, password) {
   try {
+    console.log("1");
     let database = new Database(connectionProperties);
     if (!username || !password) {
       return Promise.reject("User not set");

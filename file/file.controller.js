@@ -44,38 +44,48 @@ async function importAction(request, response) {
   fileModel.save(file,firstSheet)
     .then(result => response.json(result))
     .catch(error => {
-      if (error.includes("ER_DUP_ENTRY")) {
-        error = "Datei wurde bereits hochgeladen";
-      } else if (error.includes("arbeiterwochen_ibfk_3")) {
-        let rowIndex = error.indexOf("Current Row:") + 12;
-        let row = error.substring(rowIndex);
-        error = "Das Feld bei Zeile " + row + " Spalte 2 konnte nicht gelesen werden"
-      } else if (error.includes("arbeiterwochen_ibfk_4")) {
-        let rowIndex = error.indexOf("Current Row:") + 12;
-        let row = error.substring(rowIndex);
-        error = "Das Feld bei Zeile " + row + " Spalte 3 konnte nicht gelesen werden"
-      } else if (error.includes("arbeiterwochen_ibfk_5")) {
-        let rowIndex = error.indexOf("Current Row:") + 12;
-        let row = error.substring(rowIndex);
-        error = "Das Feld bei Zeile " + row + " Spalte 4 konnte nicht gelesen werden"
-      } else if (error.includes("arbeiterwochen_ibfk_6")) {
-        let rowIndex = error.indexOf("Current Row:") + 12;
-        let row = error.substring(rowIndex);
-        error = "Das Feld bei Zeile " + row + " Spalte 5 konnte nicht gelesen werden"
-      } else if (error.includes("arbeiterwochen_ibfk_7")) {
-        let rowIndex = error.indexOf("Current Row:") + 12;
-        let row = error.substring(rowIndex);
-        error = "Das Feld bei Zeile " + row + " Spalte 6 konnte nicht gelesen werden"
-      } else if (error.includes("arbeiterwochen_ibfk_8")) {
-        let rowIndex = error.indexOf("Current Row:") + 12;
-        let row = error.substring(rowIndex);
-        error = "Das Feld bei Zeile " + row + " Spalte 7 konnte nicht gelesen werden"
-      } else if (error.includes("arbeiterwochen_ibfk_9")) {
-        let rowIndex = error.indexOf("Current Row:") + 12;
-        let row = error.substring(rowIndex);
-        error = "Das Feld bei Zeile " + row + " Spalte 8 konnte nicht gelesen werden"
-      } else {
-        error = "Unbekannter Fehler ist aufgetreten!"
+      try {
+        if (error.includes("ER_DUP_ENTRY")) {
+          error = "Datei wurde bereits hochgeladen";
+        } else if (error.includes("arbeiterwochen_ibfk_3")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Das Feld bei Zeile " + row + " Spalte 2 konnte nicht gelesen werden"
+        } else if (error.includes("arbeiterwochen_ibfk_4")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Das Feld bei Zeile " + row + " Spalte 3 konnte nicht gelesen werden"
+        } else if (error.includes("arbeiterwochen_ibfk_5")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Das Feld bei Zeile " + row + " Spalte 4 konnte nicht gelesen werden"
+        } else if (error.includes("arbeiterwochen_ibfk_6")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Das Feld bei Zeile " + row + " Spalte 5 konnte nicht gelesen werden"
+        } else if (error.includes("arbeiterwochen_ibfk_7")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Das Feld bei Zeile " + row + " Spalte 6 konnte nicht gelesen werden"
+        } else if (error.includes("arbeiterwochen_ibfk_8")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Das Feld bei Zeile " + row + " Spalte 7 konnte nicht gelesen werden"
+        } else if (error.includes("arbeiterwochen_ibfk_9")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Das Feld bei Zeile " + row + " Spalte 8 konnte nicht gelesen werden"
+        } else if (error.includes("reading 'mid'")) {
+          let rowIndex = error.indexOf("Current Row:") + 12;
+          let row = error.substring(rowIndex);
+          error = "Der Mitarbeiter bei Zeile " + row + " ist noch nicht hinzugefügt worden!"
+        }
+        
+        else {
+          error = "Unbekannter Fehler ist aufgetreten! Versuchen Sie es später erneut."
+        } 
+      } catch {
+        error = "Unbekannter Fehler ist aufgetreten! Versuchen Sie es später erneut."
       }
       response.status(400).json(error)
     })
@@ -108,6 +118,7 @@ function statistikAction(req, res) {
   // Call getUserList from the database module
   fileModel.getUserList((error, result) => {
     if (error) {
+      // console.log(error);
       res.status(500).json({ error: error });
     } else {
       res.json(result);
