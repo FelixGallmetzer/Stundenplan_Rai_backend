@@ -45,6 +45,7 @@ async function importAction(request, response) {
     .then(result => response.json(result))
     .catch(error => {
       try {
+        //todo: include fehler besser fixen
         if (error.includes("ER_DUP_ENTRY")) {
           error = "Datei wurde bereits hochgeladen";
         } else if (error.includes("arbeiterwochen_ibfk_3")) {
