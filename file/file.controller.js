@@ -33,7 +33,7 @@ async function importAction(request, response) {
     data: request.files.file.data,
   };
 
-  fs.writeFile(filePath, file.data, (err) => {
+  fs.writeFileSync(filePath, file.data, (err) => {
     if (err) console.log(err);
   });
 
@@ -42,7 +42,10 @@ async function importAction(request, response) {
   const firstSheet = excelData[0];
 
   fileModel.save(file,firstSheet)
-    .then(result => response.json(result))
+    .then(result => {
+      fs.unlinkSync(filePath);
+      response.json(result);
+    })
     .catch(error => {
       try {
         //todo: include fehler besser fixen
@@ -88,6 +91,8 @@ async function importAction(request, response) {
       } catch {
         error = "Unbekannter Fehler ist aufgetreten! Versuchen Sie es später erneut."
       }
+
+      fs.unlinkSync(filePath);
       response.status(400).json(error)
     })
 }

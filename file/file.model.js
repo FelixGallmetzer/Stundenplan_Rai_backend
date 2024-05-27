@@ -48,13 +48,16 @@ async function save(file2, firstSheet) {
   let database;
   let wid = null;
   let currentRow = null;
-  let slqresult = null;
+  let slqresult = 0;
 
   try {
     database = new Database(connectionProperties);
     let endeerreicht = false;
     await database.query("START TRANSACTION");
-    for (const [rowIndex, row] of firstSheet.data.entries()) {
+    const x = await firstSheet.data.entries();
+    console.log(x);
+    for (const [rowIndex, row] of x) {
+      console.log(row);
       if (row[0] == "Studio") {
         endeerreicht = true;
       }
@@ -233,8 +236,9 @@ async function save(file2, firstSheet) {
         console.log("inserting row");
       }
     }
-    // todo: affectedrows manchmal undefined
-    if (slqresult.affectedRows < 1) {
+    console.log(slqresult.affectedRows)
+    if (typeof slqresult == undefined || slqresult.affectedRows < 1) {
+      console.log("energade")
       throw new Error("Unbekannter Fehler. Versuchen Sie es später erneut");
     }
     await database.query("COMMIT");
