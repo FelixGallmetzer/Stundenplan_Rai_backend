@@ -1,4 +1,4 @@
-# website-gallmetzer-siller-wiedenhofer-backend
+# Backend for the Stundenplan project with RAI Bozen
 
 # Install
 If you want that the server restarts when you make changes to the source code, then Install nodemon (globally)
